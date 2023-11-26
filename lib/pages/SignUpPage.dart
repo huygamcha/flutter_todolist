@@ -1,16 +1,23 @@
+// ignore: file_names
+// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously, sized_box_for_whitespace
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:my_app/pages/HomePage.dart';
+import 'package:my_app/pages/SignInPage.dart';
 
 class SignUpPage extends StatefulWidget {
+  const SignUpPage({super.key});
+
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
 
 class _SignUpPageState extends State<SignUpPage> {
   firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _pwdController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _pwdController = TextEditingController();
   bool circular = false;
 
   @override
@@ -66,16 +73,24 @@ class _SignUpPageState extends State<SignUpPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'if you already ?',
+                          'if you already have an account ?',
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
-                        Text(
-                          'Login ',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        )
+                        InkWell(
+                            onTap: () {
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (builder) => SignInPage()),
+                                  (route) => false);
+                            },
+                            child: Text(
+                              'Login ',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                            ))
                       ],
                     )
                   ]))),
@@ -93,10 +108,15 @@ class _SignUpPageState extends State<SignUpPage> {
                 await firebaseAuth.createUserWithEmailAndPassword(
                     email: _emailController.text,
                     password: _pwdController.text);
+            // ignore: avoid_print
             print(userCredential.user?.email);
             setState(() {
               circular = true;
             });
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (builder) => HomePage()),
+                (route) => false);
           } catch (e) {
             final snackbar = SnackBar(content: Text(e.toString()));
             ScaffoldMessenger.of(context).showSnackBar(snackbar);
