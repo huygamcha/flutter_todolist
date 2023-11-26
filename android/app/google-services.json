@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "927112087937",
+    "project_id": "flutter-c123c",
+    "storage_bucket": "flutter-c123c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:927112087937:android:b6183466c749a24f7cc080",
+        "android_client_info": {
+          "package_name": "com.example.my_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXCmxstJlWhD-Yt8kABeRHlECt5s5vRRU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
