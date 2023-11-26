@@ -1,14 +1,16 @@
+// ignore: duplicate_ignore
 // ignore: file_names
-// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously, sized_box_for_whitespace
+// ignore_for_file: library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously, sized_box_for_whitespace, file_names
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:my_app/pages/HomePage.dart';
 import 'package:my_app/pages/SignInPage.dart';
+import 'package:my_app/Services/Auth_Service.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+  const SignUpPage({Key? key}) : super(key: key);
 
   @override
   _SignUpPageState createState() => _SignUpPageState();
@@ -19,6 +21,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _pwdController = TextEditingController();
   bool circular = false;
+
+  Authclass authclass = Authclass();
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +46,15 @@ class _SignUpPageState extends State<SignUpPage> {
                     SizedBox(
                       height: 20,
                     ),
-                    buttonItem('assets/google.svg', 'Continue with Google', 25),
+                    buttonItem('assets/google.svg', 'Continue with Google', 25,
+                        () async {
+                      await authclass.googleSignIn(context);
+                    }),
                     SizedBox(
                       height: 20,
                     ),
-                    buttonItem('assets/phone.svg', 'Continue with Phone', 25),
+                    buttonItem(
+                        'assets/phone.svg', 'Continue with Phone', 25, () {}),
                     SizedBox(
                       height: 15,
                     ),
@@ -121,7 +129,7 @@ class _SignUpPageState extends State<SignUpPage> {
             final snackbar = SnackBar(content: Text(e.toString()));
             ScaffoldMessenger.of(context).showSnackBar(snackbar);
             setState(() {
-              circular = true;
+              circular = false;
             });
           }
         },
@@ -146,32 +154,37 @@ class _SignUpPageState extends State<SignUpPage> {
         ));
   }
 
-  Widget buttonItem(String imagepath, String buttomName, double size) {
-    return Container(
-        width: MediaQuery.of(context).size.width - 60,
-        height: 60,
-        child: Card(
-          color: Colors.black,
-          elevation: 8,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-              side: BorderSide(width: 1, color: Colors.grey)),
-          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 10), // Thêm padding 10 pixels theo chiều ngang
-              child: SvgPicture.asset(
-                imagepath,
-                height: size,
-                width: size,
-              ),
-            ),
-            Text(
-              buttomName,
-              style: TextStyle(color: Colors.white, fontSize: 17),
-            )
-          ]),
-        ));
+  Widget buttonItem(
+      String imagepath, String buttomName, double size, Function onTap) {
+    return InkWell(
+        onTap: () => onTap,
+        child: Container(
+            width: MediaQuery.of(context).size.width - 60,
+            height: 60,
+            child: Card(
+              color: Colors.black,
+              elevation: 8,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  side: BorderSide(width: 1, color: Colors.grey)),
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal:
+                          10), // Thêm padding 10 pixels theo chiều ngang
+                  child: SvgPicture.asset(
+                    imagepath,
+                    height: size,
+                    width: size,
+                  ),
+                ),
+                Text(
+                  buttomName,
+                  style: TextStyle(color: Colors.white, fontSize: 17),
+                )
+              ]),
+            )));
   }
 
   Widget textItem(

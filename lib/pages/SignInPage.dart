@@ -1,9 +1,10 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace, unused_field, use_build_context_synchronously
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace, unused_field, use_build_context_synchronously, file_names
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:my_app/pages/HomePage.dart';
+import 'package:my_app/pages/SignUpPage.dart';
 
 class SignInPage extends StatefulWidget {
   @override
@@ -71,13 +72,21 @@ class _SignInPageState extends State<SignInPage> {
                           "You don't have account ?",
                           style: TextStyle(color: Colors.white, fontSize: 18),
                         ),
-                        Text(
-                          'Sign in',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold),
-                        ),
+                        InkWell(
+                            onTap: () {
+                              Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (builder) => SignUpPage()),
+                                  (route) => false);
+                            },
+                            child: Text(
+                              'Sign up ',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                            ))
                       ],
                     ),
                     SizedBox(
@@ -115,7 +124,7 @@ class _SignInPageState extends State<SignInPage> {
             final snackbar = SnackBar(content: Text(e.toString()));
             ScaffoldMessenger.of(context).showSnackBar(snackbar);
             setState(() {
-              circular = true;
+              circular = false;
             });
           }
         },
