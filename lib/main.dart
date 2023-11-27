@@ -13,14 +13,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Customize Firebase initialization with options if needed
-  FirebaseOptions firebaseOptions = const FirebaseOptions(
-    apiKey: "your_api_key",
-    appId: "your_app_id",
-    messagingSenderId: "your_messaging_sender_id",
-    projectId: "your_project_id",
-  );
+  // FirebaseOptions firebaseOptions = const FirebaseOptions(
+  //   apiKey: "your_api_key",
+  //   appId: "your_app_id",
+  //   messagingSenderId: "your_messaging_sender_id",
+  //   projectId: "your_project_id",
+  // );
 
-  await Firebase.initializeApp(options: firebaseOptions);
+  await Firebase.initializeApp();
 
   runApp(MyApp());
 }

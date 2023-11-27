@@ -1,9 +1,10 @@
-// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, sized_box_for_whitespace
+// ignore_for_file: prefer_const_constructors_in_immutables, prefer_const_constructors, sized_box_for_whitespace, library_private_types_in_public_api
 
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:my_app/Services/Auth_Service.dart';
 
 class PhoneAuthPage extends StatefulWidget {
   PhoneAuthPage({Key? key}) : super(key: key);
@@ -16,6 +17,13 @@ class _PhoneAuthPageState extends State<PhoneAuthPage> {
   int start = 30;
   bool wait = false;
   String buttonName = "Send";
+
+  // theo dõi sđt được nhập vào
+  TextEditingController phoneController = TextEditingController();
+  Authclass authclass = Authclass();
+  String verificationId = "";
+  String smsCode = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -165,6 +173,7 @@ class _PhoneAuthPageState extends State<PhoneAuthPage> {
           borderRadius: BorderRadius.circular(15),
         ),
         child: TextFormField(
+            controller: phoneController,
             style: TextStyle(color: Colors.white, fontSize: 17),
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
@@ -184,13 +193,17 @@ class _PhoneAuthPageState extends State<PhoneAuthPage> {
                 suffixIcon: InkWell(
                     onTap: wait
                         ? null
-                        : () {
+                        : () async {
                             startTimer();
                             setState(() {
                               wait = true;
                               buttonName = "Resend";
                               start = 30;
                             });
+                            await authclass.verifyPhoneNumber(
+                                '+84 ${phoneController.text}',
+                                context,
+                                setData);
                           },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -204,5 +217,12 @@ class _PhoneAuthPageState extends State<PhoneAuthPage> {
                         ),
                       ),
                     )))));
+  }
+
+  void setData() {
+    setState(() {
+      verificationId = verificationId;
+    });
+    startTimer();
   }
 }

@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, unused_local_variable, avoid_print, file_names, use_build_context_synchronously, prefer_const_constructors
+// ignore_for_file: prefer_final_fields, unused_local_variable, avoid_print, file_names, use_build_context_synchronously, prefer_const_constructors, prefer_function_declarations_over_variables
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ class Authclass {
       'https://www.googleapis.com/auth/contacts.readonly',
     ],
   );
-  FirebaseAuth auth = FirebaseAuth.instance;
+  FirebaseAuth _auth = FirebaseAuth.instance;
 
   // Create storage
   final storage = new FlutterSecureStorage();
@@ -31,7 +31,7 @@ class Authclass {
         try {
           // truy cập vào firebase để tạo tài khoản thông qua google
           UserCredential userCredential =
-              await auth.signInWithCredential(credential);
+              await _auth.signInWithCredential(credential);
 
           // lưu token cho user
           storeTokenAndData(userCredential);
@@ -62,11 +62,52 @@ class Authclass {
     return await storage.read(key: "token");
   }
 
-  Future<void> logOut() async {
+  Future<void> logOut({BuildContext? context}) async {
     try {
       await _googleSignIn.signOut();
-      await auth.signOut();
+      await _auth.signOut();
       await storage.delete(key: "token");
-    } catch (e) {}
+    } catch (e) {
+      final snackbar = SnackBar(content: Text(e.toString()));
+      ScaffoldMessenger.of(context!).showSnackBar(snackbar);
+    }
+  }
+
+  Future<void> verifyPhoneNumber(
+      String phoneNumber, BuildContext context, Function setData) async {
+    PhoneVerificationCompleted verificationCompleted =
+        (PhoneAuthCredential phoneAuthCredential) async {
+      showSnackBar(context, "Verification Completed");
+    };
+
+    PhoneVerificationFailed verificationFailed =
+        (FirebaseAuthException exception) {
+      showSnackBar(context, exception.toString());
+    };
+
+    PhoneCodeSent codeSent =
+        (String verificationID, [int? forceResnedingtoken]) {
+      showSnackBar(context, "Verification Code sent on the phone number");
+    };
+
+    PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
+        (String verificationID) {
+      showSnackBar(context, "Time out");
+    };
+
+    try {
+      await _auth.verifyPhoneNumber(
+          verificationCompleted: verificationCompleted,
+          verificationFailed: verificationFailed,
+          codeSent: codeSent,
+          codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  void showSnackBar(BuildContext context, String text) {
+    final snackBar = SnackBar(content: Text(text));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

@@ -11,8 +11,6 @@ import 'package:my_app/pages/SignInPage.dart';
 import 'package:my_app/Services/Auth_Service.dart';
 
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({Key? key}) : super(key: key);
-
   @override
   _SignUpPageState createState() => _SignUpPageState();
 }
@@ -163,6 +161,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget buttonItem(
       String imagepath, String buttomName, double size, Function onTap) {
     return InkWell(
+        onTap: () => onTap(),
         child: Container(
             width: MediaQuery.of(context).size.width - 60,
             height: 60,
