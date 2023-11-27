@@ -88,6 +88,7 @@ class Authclass {
     PhoneCodeSent codeSent =
         (String verificationID, [int? forceResnedingtoken]) {
       showSnackBar(context, "Verification Code sent on the phone number");
+      setData(verificationID);
     };
 
     PhoneCodeAutoRetrievalTimeout codeAutoRetrievalTimeout =
@@ -97,10 +98,31 @@ class Authclass {
 
     try {
       await _auth.verifyPhoneNumber(
+          phoneNumber: phoneNumber,
           verificationCompleted: verificationCompleted,
           verificationFailed: verificationFailed,
           codeSent: codeSent,
           codeAutoRetrievalTimeout: codeAutoRetrievalTimeout);
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  Future<void> signInwithPhoneNumber(
+      String verificationId, String smsCode, BuildContext context) async {
+    try {
+      AuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: verificationId, smsCode: smsCode);
+
+      UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
+      storeTokenAndData(userCredential);
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (builder) => HomePage()),
+          (route) => false);
+
+      showSnackBar(context, "logged In");
     } catch (e) {
       showSnackBar(context, e.toString());
     }

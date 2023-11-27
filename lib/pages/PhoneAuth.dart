@@ -97,19 +97,25 @@ class _PhoneAuthPageState extends State<PhoneAuthPage> {
                     ),
                   ],
                 )),
-                Container(
-                  height: 60,
-                  width: MediaQuery.of(context).size.width - 60,
-                  decoration: BoxDecoration(
-                      color: Color(0xffff9601),
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Center(
-                    child: Text(
-                      "Lets Go",
-                      style: TextStyle(
-                          fontSize: 17,
-                          color: Color(0xfffbe2ae),
-                          fontWeight: FontWeight.w700),
+                InkWell(
+                  onTap: () => {
+                    authclass.signInwithPhoneNumber(
+                        verificationId, smsCode, context)
+                  },
+                  child: Container(
+                    height: 60,
+                    width: MediaQuery.of(context).size.width - 60,
+                    decoration: BoxDecoration(
+                        color: Color(0xffff9601),
+                        borderRadius: BorderRadius.circular(15)),
+                    child: Center(
+                      child: Text(
+                        "Lets Goo",
+                        style: TextStyle(
+                            fontSize: 17,
+                            color: Color(0xfffbe2ae),
+                            fontWeight: FontWeight.w700),
+                      ),
                     ),
                   ),
                 )
@@ -186,7 +192,7 @@ class _PhoneAuthPageState extends State<PhoneAuthPage> {
                   padding:
                       const EdgeInsets.symmetric(vertical: 14, horizontal: 15),
                   child: Text(
-                    " (+84) ",
+                    "(+84)",
                     style: TextStyle(color: Colors.white, fontSize: 17),
                   ),
                 ),
@@ -194,16 +200,13 @@ class _PhoneAuthPageState extends State<PhoneAuthPage> {
                     onTap: wait
                         ? null
                         : () async {
-                            startTimer();
                             setState(() {
-                              wait = true;
-                              buttonName = "Resend";
                               start = 30;
+                              wait = true;
+                              buttonName = "+84${phoneController.text}";
                             });
                             await authclass.verifyPhoneNumber(
-                                '+84 ${phoneController.text}',
-                                context,
-                                setData);
+                                "+84${phoneController.text}", context, setData);
                           },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -219,7 +222,7 @@ class _PhoneAuthPageState extends State<PhoneAuthPage> {
                     )))));
   }
 
-  void setData() {
+  void setData(verificationId) {
     setState(() {
       verificationId = verificationId;
     });
