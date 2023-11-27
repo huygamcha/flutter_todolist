@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:my_app/Services/Auth_Service.dart';
 import 'package:my_app/pages/HomePage.dart';
 import 'package:my_app/pages/SignUpPage.dart';
 
@@ -16,6 +17,8 @@ class _SignInPageState extends State<SignInPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _pwdController = TextEditingController();
   bool circular = false;
+
+  Authclass authclass = Authclass();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,11 +41,15 @@ class _SignInPageState extends State<SignInPage> {
                     SizedBox(
                       height: 20,
                     ),
-                    buttonItem('assets/google.svg', 'Continue with Google', 25),
+                    buttonItem('assets/google.svg', 'Continue with Google', 25,
+                        () async {
+                      await authclass.googleSignIn(context);
+                    }),
                     SizedBox(
                       height: 20,
                     ),
-                    buttonItem('assets/phone.svg', 'Continue with Phone', 25),
+                    buttonItem(
+                        'assets/phone.svg', 'Continue with Phone', 25, () {}),
                     SizedBox(
                       height: 15,
                     ),
@@ -149,32 +156,37 @@ class _SignInPageState extends State<SignInPage> {
         ));
   }
 
-  Widget buttonItem(String imagepath, String buttomName, double size) {
-    return Container(
-        width: MediaQuery.of(context).size.width - 60,
-        height: 60,
-        child: Card(
-          color: Colors.black,
-          elevation: 8,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
-              side: BorderSide(width: 1, color: Colors.grey)),
-          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: 10), // Thêm padding 10 pixels theo chiều ngang
-              child: SvgPicture.asset(
-                imagepath,
-                height: size,
-                width: size,
-              ),
-            ),
-            Text(
-              buttomName,
-              style: TextStyle(color: Colors.white, fontSize: 17),
-            )
-          ]),
-        ));
+  Widget buttonItem(
+      String imagepath, String buttomName, double size, Function onTap) {
+    return InkWell(
+        onTap: () => onTap(),
+        child: Container(
+            width: MediaQuery.of(context).size.width - 60,
+            height: 60,
+            child: Card(
+              color: Colors.black,
+              elevation: 8,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                  side: BorderSide(width: 1, color: Colors.grey)),
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal:
+                          10), // Thêm padding 10 pixels theo chiều ngang
+                  child: SvgPicture.asset(
+                    imagepath,
+                    height: size,
+                    width: size,
+                  ),
+                ),
+                Text(
+                  buttomName,
+                  style: TextStyle(color: Colors.white, fontSize: 17),
+                )
+              ]),
+            )));
   }
 
   Widget textItem(

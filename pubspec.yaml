@@ -39,6 +39,8 @@ dependencies:
   firebase_auth: ^4.14.1
   flutter_svg: ^2.0.9
   google_sign_in: ^5.0.2
+  flutter_secure_storage: ^9.0.0
+  flutter_otp_text_field: ^1.1.1
 
 dev_dependencies:
   flutter_test:

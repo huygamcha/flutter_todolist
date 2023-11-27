@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_app/pages/HomePage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Authclass {
   GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -13,6 +14,10 @@ class Authclass {
     ],
   );
   FirebaseAuth auth = FirebaseAuth.instance;
+
+  // Create storage
+  final storage = new FlutterSecureStorage();
+
   Future<void> googleSignIn(BuildContext context) async {
     try {
       GoogleSignInAccount? googleSignInAccount = await _googleSignIn.signIn();
@@ -27,6 +32,9 @@ class Authclass {
           // truy cập vào firebase để tạo tài khoản thông qua google
           UserCredential userCredential =
               await auth.signInWithCredential(credential);
+
+          // lưu token cho user
+          storeTokenAndData(userCredential);
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (builder) => HomePage()),
@@ -40,5 +48,25 @@ class Authclass {
       final snackbar = SnackBar(content: Text(e.toString()));
       ScaffoldMessenger.of(context).showSnackBar(snackbar);
     }
+  }
+
+  Future<void> storeTokenAndData(UserCredential userCredential) async {
+    // Write value
+    await storage.write(
+        key: 'token', value: userCredential.credential?.token.toString());
+    await storage.write(
+        key: 'token', value: userCredential.credential?.token.toString());
+  }
+
+  Future<String?> getToken() async {
+    return await storage.read(key: "token");
+  }
+
+  Future<void> logOut() async {
+    try {
+      await _googleSignIn.signOut();
+      await auth.signOut();
+      await storage.delete(key: "token");
+    } catch (e) {}
   }
 }

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:my_app/pages/HomePage.dart';
+import 'package:my_app/pages/PhoneAuth.dart';
 import 'package:my_app/pages/SignInPage.dart';
 import 'package:my_app/Services/Auth_Service.dart';
 
@@ -53,8 +54,13 @@ class _SignUpPageState extends State<SignUpPage> {
                     SizedBox(
                       height: 20,
                     ),
-                    buttonItem(
-                        'assets/phone.svg', 'Continue with Phone', 25, () {}),
+                    buttonItem('assets/phone.svg', 'Continue with Phone', 25,
+                        () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (builder) => PhoneAuthPage()));
+                    }),
                     SizedBox(
                       height: 15,
                     ),
@@ -157,7 +163,6 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget buttonItem(
       String imagepath, String buttomName, double size, Function onTap) {
     return InkWell(
-        onTap: () => onTap,
         child: Container(
             width: MediaQuery.of(context).size.width - 60,
             height: 60,

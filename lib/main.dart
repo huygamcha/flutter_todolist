@@ -1,8 +1,11 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, avoid_print, prefer_const_constructors
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, avoid_print, prefer_const_constructors, unused_local_variable
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
+import 'package:my_app/Services/Auth_Service.dart';
+import 'package:my_app/pages/HomePage.dart';
+import 'package:my_app/pages/PhoneAuth.dart';
 import 'package:my_app/pages/SignUpPage.dart';
 import 'package:my_app/pages/SignInPage.dart';
 
@@ -28,19 +31,37 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
+  // firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
 
-  void signup() async {
-    try {
-      await firebaseAuth.createUserWithEmailAndPassword(
-          email: 'lehuynhhuy2002@gmail.com', password: '123456');
-    } catch (e) {
-      print(e);
+  // void signup() async {
+  //   try {
+  //     await firebaseAuth.createUserWithEmailAndPassword(
+  //         email: 'lehuynhhuy2002@gmail.com', password: '123456');
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
+  Widget currentPage = SignUpPage();
+  Authclass authclass = Authclass();
+
+  @override
+  void initState() {
+    super.initState();
+    checkLogin();
+  }
+
+  void checkLogin() async {
+    String? token = await authclass.getToken();
+    if (token != null) {
+      setState(() {
+        currentPage = HomePage();
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: SignUpPage());
+    return MaterialApp(home: currentPage);
   }
 }
