@@ -8,19 +8,21 @@ import 'package:my_app/pages/HomePage.dart';
 import 'package:my_app/pages/PhoneAuth.dart';
 import 'package:my_app/pages/SignUpPage.dart';
 import 'package:my_app/pages/SignInPage.dart';
+import 'package:my_app/pages/AddTodoPage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Customize Firebase initialization with options if needed
-  // FirebaseOptions firebaseOptions = const FirebaseOptions(
-  //   apiKey: "your_api_key",
-  //   appId: "your_app_id",
-  //   messagingSenderId: "your_messaging_sender_id",
-  //   projectId: "your_project_id",
-  // );
+  //Customize Firebase initialization with options if needed
+  FirebaseOptions firebaseOptions = const FirebaseOptions(
+    apiKey: "your_api_key",
+    appId: "your_app_id",
+    messagingSenderId: "your_messaging_sender_id",
+    projectId: "your_project_id",
+  );
 
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(options: firebaseOptions);
+  // await Firebase.initializeApp();
 
   runApp(MyApp());
 }
@@ -31,16 +33,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
+  firebase_auth.FirebaseAuth firebaseAuth = firebase_auth.FirebaseAuth.instance;
 
-  // void signup() async {
-  //   try {
-  //     await firebaseAuth.createUserWithEmailAndPassword(
-  //         email: 'lehuynhhuy2002@gmail.com', password: '123456');
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
+  void signup() async {
+    try {
+      await firebaseAuth.createUserWithEmailAndPassword(
+          email: 'lehuynhhuy2002@gmail.com', password: '123456');
+    } catch (e) {
+      print(e);
+    }
+  }
 
   Widget currentPage = SignUpPage();
   Authclass authclass = Authclass();

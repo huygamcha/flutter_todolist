@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_final_fields, unused_local_variable, avoid_print, file_names, use_build_context_synchronously, prefer_const_constructors, prefer_function_declarations_over_variables
+// ignore_for_file: prefer_final_fields, unused_local_variable, avoid_print, file_names, use_build_context_synchronously, prefer_const_constructors, prefer_function_declarations_over_variables, unnecessary_new
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
