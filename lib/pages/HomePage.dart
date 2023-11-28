@@ -98,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                     (route) => false);
               },
               child: Icon(
-                Icons.settings,
+                Icons.logout_outlined,
                 size: 32,
                 color: Colors.white,
               )),
