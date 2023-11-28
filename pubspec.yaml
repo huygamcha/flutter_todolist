@@ -41,6 +41,7 @@ dependencies:
   google_sign_in: ^6.1.6
   flutter_secure_storage: ^9.0.0
   flutter_otp_text_field: ^1.1.1
+  cloud_firestore: ^4.13.2
 
 dev_dependencies:
   flutter_test:
