@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
-class TodoCart extends StatelessWidget{
+class TodoCart extends StatelessWidget {
   const TodoCart({
-    Key? key, 
-    required this.title, 
-    required this.iconData, 
-    required this.iconColor, 
+    Key? key,
+    required this.title,
+    required this.iconData,
+    required this.iconColor,
     required this.time,
     required this.check,
     required this.iconBgColor,
+    required this.onChange,
+    required this.index,
   }) : super(key: key);
-
 
   final String title;
   final IconData iconData;
@@ -18,6 +19,8 @@ class TodoCart extends StatelessWidget{
   final String time;
   final bool check;
   final Color iconBgColor;
+  final Function onChange;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +37,13 @@ class TodoCart extends StatelessWidget{
               scale: 1.5,
               child: Checkbox(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5)
-                ),
+                    borderRadius: BorderRadius.circular(5)),
                 activeColor: Color(0xff6c8a9),
                 checkColor: Color(0xff0e3e26),
                 value: check,
-                onChanged: (bool? value) {},
+                onChanged: (bool? value) {
+                  onChange(index);
+                },
               ),
             ),
           ),
@@ -49,11 +53,13 @@ class TodoCart extends StatelessWidget{
               child: Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
-                  ),
+                ),
                 color: Color(0xff2a2e3d),
                 child: Row(
                   children: [
-                    SizedBox(width: 15,),
+                    SizedBox(
+                      width: 15,
+                    ),
                     Container(
                       height: 33,
                       width: 36,
@@ -61,14 +67,17 @@ class TodoCart extends StatelessWidget{
                         color: iconBgColor,
                         borderRadius: BorderRadius.circular(8),
                       ),
-                      child: Icon(iconData, color: iconColor,),
+                      child: Icon(
+                        iconData,
+                        color: iconColor,
+                      ),
                     ),
                     SizedBox(
                       width: 20,
                     ),
                     Expanded(
                       child: Text(
-                        title, 
+                        title,
                         style: TextStyle(
                           fontSize: 18,
                           letterSpacing: 1,
@@ -78,7 +87,7 @@ class TodoCart extends StatelessWidget{
                       ),
                     ),
                     Text(
-                      time, 
+                      time,
                       style: TextStyle(
                         fontSize: 15,
                         letterSpacing: 1,

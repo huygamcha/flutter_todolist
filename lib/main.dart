@@ -44,7 +44,7 @@ class _MyAppState extends State<MyApp> {
   //   }
   // }
 
-  Widget currentPage = SignUpPage();
+  Widget currentPage = SignInPage();
   Authclass authclass = Authclass();
 
   @override
@@ -64,6 +64,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: currentPage);
+    return MaterialApp(home: SignInPage());
   }
 }

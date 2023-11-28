@@ -27,7 +27,7 @@ class _SignInPageState extends State<SignInPage> {
           child: Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
-              color: Colors.black,
+              color: Color.fromARGB(255, 0, 0, 0),
               child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -42,26 +42,11 @@ class _SignInPageState extends State<SignInPage> {
                     SizedBox(
                       height: 20,
                     ),
-                    buttonItem('assets/google.svg', 'Continue with Google', 25,
-                        () async {
-                      await authclass.googleSignIn(context);
-                    }),
                     SizedBox(
                       height: 20,
                     ),
-                    buttonItem('assets/phone.svg', 'Continue with Phone', 25,
-                        () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (builder) => PhoneAuthPage()));
-                    }),
                     SizedBox(
                       height: 15,
-                    ),
-                    Text(
-                      "Or",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                     SizedBox(
                       height: 15,
@@ -160,39 +145,6 @@ class _SignInPageState extends State<SignInPage> {
                   ),
           ),
         ));
-  }
-
-  Widget buttonItem(
-      String imagepath, String buttomName, double size, Function onTap) {
-    return InkWell(
-        onTap: () => onTap(),
-        child: Container(
-            width: MediaQuery.of(context).size.width - 60,
-            height: 60,
-            child: Card(
-              color: Colors.black,
-              elevation: 8,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  side: BorderSide(width: 1, color: Colors.grey)),
-              child:
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal:
-                          10), // Thêm padding 10 pixels theo chiều ngang
-                  child: SvgPicture.asset(
-                    imagepath,
-                    height: size,
-                    width: size,
-                  ),
-                ),
-                Text(
-                  buttomName,
-                  style: TextStyle(color: Colors.white, fontSize: 17),
-                )
-              ]),
-            )));
   }
 
   Widget textItem(

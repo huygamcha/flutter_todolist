@@ -1,33 +1,29 @@
 // import 'dart:js';
-// ignore_for_file: unused_local_variable
-
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:my_app/pages/SignUpPage.dart';
 
-class AddTodoPage extends StatefulWidget {
-  AddTodoPage({Key? key}) : super(key: key);
+class ViewData extends StatefulWidget {
+  ViewData({Key? key, required this.document, required this.id})
+      : super(key: key);
+  final Map<String, dynamic> document;
+  final String id;
 
   @override
-  _AddTodoPageState createState() => _AddTodoPageState();
+  _ViewDataState createState() => _ViewDataState();
 }
 
-class _AddTodoPageState extends State<AddTodoPage> {
+class _ViewDataState extends State<ViewData> {
   // tạo các cách controller để nhận giá trị được nhập vào
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _descriptionController = TextEditingController();
+  late TextEditingController _titleController;
+  late TextEditingController __descriptionController;
   String type = "";
   String category = "";
+  bool edit = false;
   User? currentUser; // Đối tượng người dùng hiện tại
-  @override
-  void initState() {
-    super.initState();
-    getCurrentUser();
-  }
 
   void getCurrentUser() {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -35,8 +31,23 @@ class _AddTodoPageState extends State<AddTodoPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+    // TODO: implement initState
+    super.initState();
+    String title = widget.document["title"] ?? "Hey There";
+    _titleController = TextEditingController(text: title);
+    __descriptionController =
+        TextEditingController(text: widget.document["description"]);
+    type = widget.document["task"] ?? "";
+    category = widget.document["category"] ?? "";
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var scaffold = Scaffold(
+    return Scaffold(
+      backgroundColor: Color(0xff1d1e26),
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
@@ -53,13 +64,51 @@ class _AddTodoPageState extends State<AddTodoPage> {
               const SizedBox(
                 height: 30,
               ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  CupertinoIcons.arrow_left,
-                  color: Colors.white,
-                  size: 28,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      CupertinoIcons.arrow_left,
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          String userEmail = currentUser?.email ?? "guest";
+                          FirebaseFirestore.instance
+                              .collection("users")
+                              .doc(userEmail)
+                              .collection("Todo")
+                              .doc(widget.id)
+                              .delete()
+                              .then((value) => {Navigator.pop(context)});
+                        },
+                        icon: Icon(
+                          Icons.delete,
+                          color: Colors.red,
+                          size: 28,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            edit = !edit;
+                          });
+                        },
+                        icon: Icon(
+                          Icons.edit,
+                          color: edit ? Colors.green : Colors.white,
+                          size: 28,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               Padding(
                 padding:
@@ -67,8 +116,8 @@ class _AddTodoPageState extends State<AddTodoPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      "create",
+                    Text(
+                      edit ? "Editing" : "View",
                       style: TextStyle(
                         fontSize: 33,
                         color: Colors.white,
@@ -80,7 +129,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
                       height: 8,
                     ),
                     const Text(
-                      "new todo",
+                      "Your todo",
                       style: TextStyle(
                         fontSize: 33,
                         color: Colors.white,
@@ -152,26 +201,18 @@ class _AddTodoPageState extends State<AddTodoPage> {
                     const SizedBox(
                       height: 50,
                     ),
-                    button(context),
+                    edit ? button(context) : Container(),
                     const SizedBox(
                       height: 30,
                     ),
                   ],
                 ),
               ),
-              // Text(
-              //   '${currentUser?.email ?? "Guest"}',
-              //   style: TextStyle(
-              //     fontSize: 16,
-              //     color: Colors.white,
-              //   ),
-              // ),
             ],
           ),
         ),
       ),
     );
-    return scaffold;
   }
 
   Widget button(BuildContext context) {
@@ -182,11 +223,12 @@ class _AddTodoPageState extends State<AddTodoPage> {
               .collection("users")
               .doc(userEmail)
               .collection("Todo")
-              .add({
+              .doc(widget.id)
+              .update({
             'title': _titleController.text,
             'task': type,
             'category': category,
-            'description': _descriptionController.text,
+            'description': __descriptionController.text
           });
 
           //quay lại màn hình trước đó
@@ -206,7 +248,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
           ),
           child: const Center(
             child: Text(
-              "Add Todo",
+              "Update Todo",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 18,
@@ -226,7 +268,8 @@ class _AddTodoPageState extends State<AddTodoPage> {
         borderRadius: BorderRadius.circular(15),
       ),
       child: TextFormField(
-        controller: _descriptionController,
+        controller: __descriptionController,
+        enabled: edit,
         style: const TextStyle(
           color: Colors.grey,
           fontSize: 17,
@@ -250,11 +293,13 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
   Widget taskSelect(String label, int color) {
     return InkWell(
-        onTap: () {
-          setState(() {
-            type = label;
-          });
-        },
+        onTap: edit
+            ? () {
+                setState(() {
+                  type = label;
+                });
+              }
+            : null,
         child: Chip(
           backgroundColor: type == label ? Colors.black : Color(color),
           shape: RoundedRectangleBorder(
@@ -277,11 +322,13 @@ class _AddTodoPageState extends State<AddTodoPage> {
 
   Widget categorySelect(String label, int color) {
     return InkWell(
-        onTap: () {
-          setState(() {
-            category = label;
-          });
-        },
+        onTap: edit
+            ? () {
+                setState(() {
+                  category = label;
+                });
+              }
+            : null,
         child: Chip(
           backgroundColor: category == label ? Colors.black : Color(color),
           shape: RoundedRectangleBorder(
@@ -310,22 +357,25 @@ class _AddTodoPageState extends State<AddTodoPage> {
         color: const Color(0xff2a2e3d),
         borderRadius: BorderRadius.circular(15),
       ),
-      child: TextFormField(
-        controller: _titleController,
-        style: const TextStyle(
-          color: Colors.grey,
-          fontSize: 17,
-        ),
-        decoration: const InputDecoration(
-          border: InputBorder.none,
-          hintText: "Task Title",
-          hintStyle: TextStyle(
+      child: Center(
+        child: TextFormField(
+          controller: _titleController,
+          enabled: edit,
+          style: const TextStyle(
             color: Colors.grey,
             fontSize: 17,
           ),
-          contentPadding: EdgeInsets.only(
-            left: 20,
-            right: 20,
+          decoration: const InputDecoration(
+            border: InputBorder.none,
+            hintText: "Task Title",
+            hintStyle: TextStyle(
+              color: Colors.grey,
+              fontSize: 17,
+            ),
+            contentPadding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+            ),
           ),
         ),
       ),
