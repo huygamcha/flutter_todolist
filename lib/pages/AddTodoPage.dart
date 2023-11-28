@@ -1,6 +1,9 @@
 // import 'dart:js';
+// ignore_for_file: unused_local_variable
+
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +21,19 @@ class _AddTodoPageState extends State<AddTodoPage> {
   TextEditingController __descriptionController = TextEditingController();
   String type = "";
   String category = "";
+
+  User? currentUser; // Đối tượng người dùng hiện tại
+  @override
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+
+  void getCurrentUser() {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    currentUser = auth.currentUser;
+  }
+
   @override
   Widget build(BuildContext context) {
     var scaffold = Scaffold(
@@ -143,6 +159,13 @@ class _AddTodoPageState extends State<AddTodoPage> {
                   ],
                 ),
               ),
+              // Text(
+              //   '${currentUser?.email ?? "Guest"}',
+              //   style: TextStyle(
+              //     fontSize: 16,
+              //     color: Colors.white,
+              //   ),
+              // ),
             ],
           ),
         ),
@@ -154,11 +177,16 @@ class _AddTodoPageState extends State<AddTodoPage> {
   Widget button(BuildContext context) {
     return InkWell(
         onTap: () {
-          FirebaseFirestore.instance.collection("Todo").add({
+          String userEmail = currentUser?.email ?? "guest";
+          FirebaseFirestore.instance
+              .collection("users")
+              .doc(userEmail)
+              .collection("Todo")
+              .add({
             'title': _titleController.text,
             'task': type,
             'category': category,
-            'description': __descriptionController.text
+            'description': __descriptionController.text,
           });
 
           //quay lại màn hình trước đó

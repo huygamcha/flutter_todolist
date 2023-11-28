@@ -90,11 +90,18 @@ class _HomePageState extends State<HomePage> {
           label: '',
         ),
         BottomNavigationBarItem(
-          icon: Icon(
-            Icons.settings,
-            size: 32,
-            color: Colors.white,
-          ),
+          icon: InkWell(
+              onTap: () {
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (builder) => SignUpPage()),
+                    (route) => false);
+              },
+              child: Icon(
+                Icons.settings,
+                size: 32,
+                color: Colors.white,
+              )),
           label: '',
         ),
       ]),
