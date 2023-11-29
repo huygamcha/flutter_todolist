@@ -63,9 +63,9 @@ class _AddTodoPageState extends State<AddTodoPage> {
                       (route) => false);
                 },
                 icon: const Icon(
-                  CupertinoIcons.arrow_left,
+                  CupertinoIcons.home,
                   color: Colors.white,
-                  size: 28,
+                  size: 40,
                 ),
               ),
               Padding(
@@ -223,7 +223,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
               .add({
             'title': _titleController.text,
             'task': type,
-            'Category': Category,
+            'Tag': Category,
             'description': _descriptionController.text,
             'time': _timeController.text,
           });

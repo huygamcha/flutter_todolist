@@ -45,27 +45,27 @@ class _SignUpPageState extends State<SignUpPage> {
                     SizedBox(
                       height: 20,
                     ),
-                    buttonItem('assets/google.svg', 'Continue with Google', 25,
-                        () async {
-                      await authclass.googleSignIn(context);
-                    }),
+                    // buttonItem('assets/google.svg', 'Continue with Google', 25,
+                    //     () async {
+                    //   await authclass.googleSignIn(context);
+                    // }),
                     SizedBox(
                       height: 20,
                     ),
-                    buttonItem('assets/phone.svg', 'Continue with Phone', 25,
-                        () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (builder) => PhoneAuthPage()));
-                    }),
+                    // buttonItem('assets/phone.svg', 'Continue with Phone', 25,
+                    //     () {
+                    //   Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //           builder: (builder) => PhoneAuthPage()));
+                    // }),
                     SizedBox(
                       height: 15,
                     ),
-                    Text(
-                      "Or",
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
+                    // Text(
+                    //   "Or",
+                    //   style: TextStyle(color: Colors.white, fontSize: 18),
+                    // ),
                     SizedBox(
                       height: 15,
                     ),

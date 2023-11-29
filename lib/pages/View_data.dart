@@ -80,9 +80,9 @@ class _ViewDataState extends State<ViewData> {
                           (route) => false);
                     },
                     icon: Icon(
-                      CupertinoIcons.arrow_left,
+                      CupertinoIcons.home,
                       color: Colors.white,
-                      size: 28,
+                      size: 40,
                     ),
                   ),
                   Row(
@@ -101,7 +101,7 @@ class _ViewDataState extends State<ViewData> {
                         icon: Icon(
                           Icons.delete,
                           color: Colors.red,
-                          size: 28,
+                          size: 40,
                         ),
                       ),
                       IconButton(
@@ -113,7 +113,7 @@ class _ViewDataState extends State<ViewData> {
                         icon: Icon(
                           Icons.edit,
                           color: edit ? Colors.green : Colors.white,
-                          size: 28,
+                          size: 40,
                         ),
                       ),
                     ],
@@ -298,7 +298,7 @@ class _ViewDataState extends State<ViewData> {
               .update({
             'title': _titleController.text,
             'task': type,
-            'Category': Category,
+            'Tag': Category,
             'description': __descriptionController.text,
             'time': _timeController.text,
           });

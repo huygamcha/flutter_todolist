@@ -61,11 +61,11 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.black87,
         title: Text(
-          "To day's Schedule",
+          "${currentUser?.email}",
           style: TextStyle(
             fontSize: 34,
             fontWeight: FontWeight.bold,
-            color: Colors.red,
+            color: Color.fromARGB(255, 255, 255, 255),
           ),
         ),
         actions: [
@@ -78,11 +78,11 @@ class _HomePageState extends State<HomePage> {
           )
         ],
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(35),
+          preferredSize: Size.fromHeight(70),
           child: Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: const EdgeInsets.only(left: 22),
+              padding: const EdgeInsets.only(left: 14),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -117,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                     icon: Icon(
                       Icons.delete,
                       color: Colors.red,
-                      size: 28,
+                      size: 40,
                     ),
                   ),
                 ],
