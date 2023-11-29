@@ -8,7 +8,7 @@ import 'package:my_app/pages/HomePage.dart';
 import 'package:my_app/pages/PhoneAuth.dart';
 import 'package:my_app/pages/SignUpPage.dart';
 import 'package:my_app/pages/SignInPage.dart';
-import 'package:my_app/pages/AddTodoPage.dart';
+import 'package:my_app/pages/AddPage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_app/Custom/TodoCart.dart';
 import 'package:my_app/Services/Auth_Service.dart';
-import 'package:my_app/pages/AddTodoPage.dart';
+import 'package:my_app/pages/AddPage.dart';
 import 'package:my_app/pages/SignUpPage.dart';
-import 'package:my_app/pages/view_data.dart';
+import 'package:my_app/pages/UpdatePage.dart';
 
 class HomePage extends StatefulWidget {
   @override
