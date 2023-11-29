@@ -1,8 +1,7 @@
-// ignore_for_file: file_names, use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, use_build_context_synchronously
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:my_app/Custom/TodoCart.dart';
 import 'package:my_app/Services/Auth_Service.dart';
 import 'package:my_app/pages/AddTodoPage.dart';
@@ -19,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   User? currentUser; // Đối tượng người dùng hiện tại
   late Stream<QuerySnapshot> _stream;
   Widget currentPage = SignUpPage();
+  late String formattedDate;
 
   @override
   void initState() {
@@ -31,6 +31,12 @@ class _HomePageState extends State<HomePage> {
         .doc(userEmail)
         .collection("Todo")
         .snapshots();
+    _updateDate();
+  }
+
+  void _updateDate() {
+    DateTime now = DateTime.now();
+    formattedDate = DateFormat('EEEE d').format(now);
   }
 
   void checkLogin() async {
@@ -59,12 +65,13 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(
             fontSize: 34,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Colors.red,
           ),
         ),
         actions: [
           CircleAvatar(
             backgroundImage: AssetImage("assets/alo.jpg"),
+            radius: 30,
           ),
           SizedBox(
             width: 25,
@@ -80,21 +87,31 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Monday 21",
+                    formattedDate,
                     style: TextStyle(
                       fontSize: 33,
                       fontWeight: FontWeight.w600,
-                      color: Colors.red,
+                      color: Colors.blue,
                     ),
                   ),
                   IconButton(
                     onPressed: () {
-                      var instance =
-                          FirebaseFirestore.instance.collection("Todo");
+                      String userEmail = currentUser?.email ?? "guest";
+
+                      var instance = FirebaseFirestore.instance
+                          .collection("users")
+                          .doc(userEmail)
+                          .collection("Todo");
                       for (var i = 0; i < selected.length; i++) {
                         if (selected[i].checkValue) {
                           instance.doc(selected[i].id).delete();
+                          selected[i].checkValue = true;
                         }
+                      }
+
+                      // set cho việc xoá trở lại bình thường
+                      for (var i = 0; i < selected.length; i++) {
+                        selected[i].checkValue = true;
                       }
                     },
                     icon: Icon(
@@ -154,7 +171,7 @@ class _HomePageState extends State<HomePage> {
                     (route) => false);
               },
               child: Icon(
-                Icons.settings,
+                Icons.logout_outlined,
                 size: 32,
                 color: Colors.white,
               )),
@@ -174,18 +191,22 @@ class _HomePageState extends State<HomePage> {
                   Color iconColor;
                   Map<String, dynamic> document =
                       snapshot.data?.docs[index].data() as Map<String, dynamic>;
-                  switch (document["category"]) {
-                    case "work":
+                  switch (document["Tag"]) {
+                    case "Work":
                       iconData = Icons.run_circle_outlined;
                       iconColor = Colors.red;
                       break;
-                    case "Workout":
+                    case "Homework":
+                      iconData = Icons.book;
+                      iconColor = Colors.orange;
+                      break;
+                    case "Health":
+                      iconData = Icons.hearing;
+                      iconColor = Colors.purple;
+                      break;
+                    case "Sport":
                       iconData = Icons.alarm;
                       iconColor = Colors.teal;
-                      break;
-                    case "Run":
-                      iconData = Icons.run_circle;
-                      iconColor = Colors.yellow;
                       break;
                     case "Food":
                       iconData = Icons.local_grocery_store;
@@ -197,7 +218,7 @@ class _HomePageState extends State<HomePage> {
                       break;
                     default:
                       iconData = Icons.run_circle_outlined;
-                      iconColor = Colors.red;
+                      iconColor = Colors.black;
                   }
                   selected.add(Select(
                       id: snapshot.data!.docs[index].id, checkValue: false));
@@ -211,15 +232,19 @@ class _HomePageState extends State<HomePage> {
                                     id: snapshot.data!.docs[index].id,
                                   )));
                     },
-                    child: TodoCart(
-                      title: document["title"] ?? "Hey There",
-                      check: selected[index].checkValue,
-                      iconBgColor: Colors.white,
-                      iconColor: iconColor,
-                      iconData: iconData,
-                      time: "10 PM",
-                      index: index,
-                      onChange: onChange,
+                    child: Container(
+                      margin: EdgeInsets.only(top: 6.0),
+                      // padding: EdgeInsets.only(top: 6.0),
+                      child: TodoCart(
+                        title: document["title"] ?? "Hey There",
+                        check: selected[index].checkValue,
+                        iconBgColor: Colors.white,
+                        iconColor: iconColor,
+                        iconData: iconData,
+                        time: document["time"] ?? "",
+                        index: index,
+                        onChange: onChange,
+                      ),
                     ),
                   );
                 });

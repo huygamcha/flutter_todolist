@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:my_app/pages/HomePage.dart';
 
 class ViewData extends StatefulWidget {
   ViewData({Key? key, required this.document, required this.id})
@@ -20,8 +21,9 @@ class _ViewDataState extends State<ViewData> {
   // tạo các cách controller để nhận giá trị được nhập vào
   late TextEditingController _titleController;
   late TextEditingController __descriptionController;
+  late TextEditingController _timeController;
   String type = "";
-  String category = "";
+  String Category = "";
   bool edit = false;
   User? currentUser; // Đối tượng người dùng hiện tại
 
@@ -40,8 +42,10 @@ class _ViewDataState extends State<ViewData> {
     _titleController = TextEditingController(text: title);
     __descriptionController =
         TextEditingController(text: widget.document["description"]);
+    _timeController =
+        TextEditingController(text: widget.document["time"] ?? "");
     type = widget.document["task"] ?? "";
-    category = widget.document["category"] ?? "";
+    Category = widget.document["Tag"] ?? "";
   }
 
   @override
@@ -51,12 +55,13 @@ class _ViewDataState extends State<ViewData> {
       body: Container(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(colors: [
-            Color(0xff1d1e26),
-            Color(0xff252041),
-          ]),
-        ),
+        // decoration: const BoxDecoration(
+        //   gradient: LinearGradient(colors: [
+        //     Color(0xff1d1e26),
+        //     Color(0xff252041),
+        //   ]),
+        // ),
+        color: Colors.black,
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,7 +73,12 @@ class _ViewDataState extends State<ViewData> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (builder) => HomePage()),
+                          (route) => false);
+                    },
                     icon: Icon(
                       CupertinoIcons.arrow_left,
                       color: Colors.white,
@@ -116,13 +126,15 @@ class _ViewDataState extends State<ViewData> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      edit ? "Editing" : "View",
-                      style: TextStyle(
-                        fontSize: 33,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 4,
+                    Center(
+                      child: Text(
+                        edit ? "Editing work!" : "View work!",
+                        style: TextStyle(
+                          fontSize: 40,
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 4,
+                        ),
                       ),
                     ),
                     const SizedBox(
@@ -131,8 +143,8 @@ class _ViewDataState extends State<ViewData> {
                     const Text(
                       "Your todo",
                       style: TextStyle(
-                        fontSize: 33,
-                        color: Colors.white,
+                        fontSize: 30,
+                        color: Colors.blue,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 2,
                       ),
@@ -140,7 +152,7 @@ class _ViewDataState extends State<ViewData> {
                     const SizedBox(
                       height: 25,
                     ),
-                    label("task Title"),
+                    label("Duty"),
                     const SizedBox(
                       height: 12,
                     ),
@@ -148,17 +160,33 @@ class _ViewDataState extends State<ViewData> {
                     const SizedBox(
                       height: 30,
                     ),
-                    label("Task Type"),
+                    label("Classify"),
                     const SizedBox(
                       height: 12,
                     ),
-                    Row(
+                    Wrap(
                       children: [
-                        taskSelect("Imporatant", 0xff2664fa),
+                        taskSelect("Default", 0xff3b5998),
                         const SizedBox(
-                          width: 20,
+                          width: 15,
                         ),
-                        taskSelect("Planned", 0xff2bc8d9),
+                        taskSelect("Important", 0xff3b5998),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        taskSelect("Urgent", 0xff3b5998),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        taskSelect("Personal", 0xff3b5998),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        taskSelect("Meeting", 0xff3b5998),
+                        const SizedBox(
+                          width: 15,
+                        ),
+                        taskSelect("Planned", 0xff3b5998),
                       ],
                     ),
                     const SizedBox(
@@ -172,32 +200,44 @@ class _ViewDataState extends State<ViewData> {
                     const SizedBox(
                       height: 12,
                     ),
-                    label("category"),
+                    label("Tag"),
                     const SizedBox(
                       height: 12,
                     ),
                     Wrap(
                       runSpacing: 10,
                       children: [
-                        categorySelect("Food", 0xffff6d6e),
+                        CategorySelect("Food", 0xff3b5998),
                         const SizedBox(
                           width: 20,
                         ),
-                        categorySelect("Workout", 0xfff29732),
+                        CategorySelect("Sport", 0xff3b5998),
                         const SizedBox(
                           width: 20,
                         ),
-                        categorySelect("work", 0xff6557ff),
+                        CategorySelect("Work", 0xff3b5998),
                         const SizedBox(
                           width: 20,
                         ),
-                        categorySelect("Design", 0xff234ebd),
+                        CategorySelect("Homework", 0xff3b5998),
                         const SizedBox(
                           width: 20,
                         ),
-                        categorySelect("Run", 0xff2bc8d9),
+                        CategorySelect("Health", 0xff3b5998),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        CategorySelect("Design", 0xff3b5998),
                       ],
                     ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    label("Time"),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    time(context),
                     const SizedBox(
                       height: 50,
                     ),
@@ -209,6 +249,37 @@ class _ViewDataState extends State<ViewData> {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget time(BuildContext context) {
+    return Container(
+      height: 55,
+      width: MediaQuery.of(context).size.width,
+      decoration: BoxDecoration(
+        color: const Color(0xff2a2e3d),
+        borderRadius: BorderRadius.circular(15),
+      ),
+      child: TextFormField(
+        enabled: edit,
+        controller: _timeController,
+        style: const TextStyle(
+          color: Colors.grey,
+          fontSize: 17,
+        ),
+        decoration: const InputDecoration(
+          border: InputBorder.none,
+          hintText: "Task Time...",
+          hintStyle: TextStyle(
+            color: Colors.grey,
+            fontSize: 17,
+          ),
+          contentPadding: EdgeInsets.only(
+            left: 20,
+            right: 20,
           ),
         ),
       ),
@@ -227,8 +298,9 @@ class _ViewDataState extends State<ViewData> {
               .update({
             'title': _titleController.text,
             'task': type,
-            'category': category,
-            'description': __descriptionController.text
+            'Category': Category,
+            'description': __descriptionController.text,
+            'time': _timeController.text,
           });
 
           //quay lại màn hình trước đó
@@ -251,7 +323,7 @@ class _ViewDataState extends State<ViewData> {
               "Update Todo",
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -277,7 +349,7 @@ class _ViewDataState extends State<ViewData> {
         maxLines: null,
         decoration: const InputDecoration(
           border: InputBorder.none,
-          hintText: "Task Title",
+          hintText: "Task Title...",
           hintStyle: TextStyle(
             color: Colors.grey,
             fontSize: 17,
@@ -301,7 +373,7 @@ class _ViewDataState extends State<ViewData> {
               }
             : null,
         child: Chip(
-          backgroundColor: type == label ? Colors.black : Color(color),
+          backgroundColor: type == label ? Colors.red : Color(color),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
               10,
@@ -320,17 +392,17 @@ class _ViewDataState extends State<ViewData> {
         ));
   }
 
-  Widget categorySelect(String label, int color) {
+  Widget CategorySelect(String label, int color) {
     return InkWell(
         onTap: edit
             ? () {
                 setState(() {
-                  category = label;
+                  Category = label;
                 });
               }
             : null,
         child: Chip(
-          backgroundColor: category == label ? Colors.black : Color(color),
+          backgroundColor: Category == label ? Colors.red : Color(color),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(
               10,
@@ -367,7 +439,7 @@ class _ViewDataState extends State<ViewData> {
           ),
           decoration: const InputDecoration(
             border: InputBorder.none,
-            hintText: "Task Title",
+            hintText: "Task Title...",
             hintStyle: TextStyle(
               color: Colors.grey,
               fontSize: 17,
@@ -383,10 +455,10 @@ class _ViewDataState extends State<ViewData> {
   }
 
   Widget label(String label) {
-    return const Text(
-      "Task Title",
+    return Text(
+      label,
       style: TextStyle(
-        fontSize: 16.5,
+        fontSize: 18,
         color: Colors.white,
         fontWeight: FontWeight.w600,
         letterSpacing: 0.2,
